@@ -1,0 +1,19 @@
+2018-03-19 15:40:32.815 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==>  Preparing: SELECT product_category_id, product_category_name, priority, create_time, shop_id, FROM tb_product_category WHERE shop_id = ? 
+2018-03-19 15:40:32.888 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==> Parameters: 1(Long)
+2018-03-19 15:42:53.827 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==>  Preparing: SELECT product_category_id, product_category_name, priority, create_time, shop_id FROM tb_product_category WHERE shop_id = ? 
+2018-03-19 15:42:53.890 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==> Parameters: 1(Long)
+2018-03-19 15:42:53.985 [main] DEBUG c.j.c.d.P.queryProductCategoryList - <==      Total: 2
+2018-03-19 19:39:52.455 [main] DEBUG c.j.c.d.P.batchInsertProductCategory - ==>  Preparing: INSERT INTO tb_product_category(product_category_name,priority,create_time,shop_is) VALUES ( ?, ?, ?, ? ) , ( ?, ?, ?, ? ) 
+2018-03-19 19:39:52.518 [main] DEBUG c.j.c.d.P.batchInsertProductCategory - ==> Parameters: 商品类别1(String), 1(Integer), 2018-03-19 19:39:51.703(Timestamp), 1(Long), 商品类别2(String), 2(Integer), 2018-03-19 19:39:51.703(Timestamp), 1(Long)
+2018-03-19 19:40:37.088 [main] DEBUG c.j.c.d.P.batchInsertProductCategory - ==>  Preparing: INSERT INTO tb_product_category(product_category_name,priority,create_time,shop_id) VALUES ( ?, ?, ?, ? ) , ( ?, ?, ?, ? ) 
+2018-03-19 19:40:37.141 [main] DEBUG c.j.c.d.P.batchInsertProductCategory - ==> Parameters: 商品类别1(String), 1(Integer), 2018-03-19 19:40:36.448(Timestamp), 1(Long), 商品类别2(String), 2(Integer), 2018-03-19 19:40:36.448(Timestamp), 1(Long)
+2018-03-19 19:40:37.220 [main] DEBUG c.j.c.d.P.batchInsertProductCategory - <==    Updates: 2
+2018-03-19 21:35:03.695 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==>  Preparing: SELECT product_category_id, product_category_name, priority, create_time, shop_id FROM tb_product_category WHERE shop_id = ? ORDER BY priority DESC 
+2018-03-19 21:35:03.790 [main] DEBUG c.j.c.d.P.queryProductCategoryList - ==> Parameters: 1(Long)
+2018-03-19 21:35:03.834 [main] DEBUG c.j.c.d.P.queryProductCategoryList - <==      Total: 6
+2018-03-19 21:35:03.844 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - ==>  Preparing: DELETE FROM tb_product_category WHERE product_category_id = ? AND shop_id = ? 
+2018-03-19 21:35:03.845 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - ==> Parameters: 7(Long), 1(Long)
+2018-03-19 21:35:03.907 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - <==    Updates: 1
+2018-03-19 21:35:03.909 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - ==>  Preparing: DELETE FROM tb_product_category WHERE product_category_id = ? AND shop_id = ? 
+2018-03-19 21:35:03.910 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - ==> Parameters: 6(Long), 1(Long)
+2018-03-19 21:35:03.912 [main] DEBUG c.j.c.dao.ProductCategoryDao.deleteProductCategory - <==    Updates: 1
