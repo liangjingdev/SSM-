@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<!-- 定义参数变量 -->
+	<property name="log.level" value="debug" />
+	<property name="log.maxHistory" value="30" /> <!-- 指明日志信息文件所保留最大数量,此处表示30个也即30天,多出的天数会逐渐覆盖掉最前面的那些天的日志信息（一天一个日志文件） -->
+	<property name="log.filePath" value="${catalina.base}/logs/webapps" /> <!-- 指明日志信息文件的存储路径，${catalina.base}该变量存储的是Tomcat实例的根目录 -->
+	<property name="log.pattern"
+		value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" /> <!-- 指明日志信息展现的格式 -->
+
+	<!-- 控制台设置 -->
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoder标签的功能和layout有所相似，但是比layout的功能要强大 -->
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- DEBUG (利用debug日志进行对程序调试调优)-->
+	<appender name="debugAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志信息文件存放路径 -->
+		<file>${log.filePath}/debug.log</file>
+		<!-- 设置滚动策略，该滚动策略是基于时间去滚动的 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 设置文件名称（绝对路径）,从后缀即可以看出logback会将我们的日志文件进行压缩（一天一个日志文件，今天生成的日志文件要等到明天才会自动将其压缩生成一个新的.gz文件） -->
+			<fileNamePattern>${log.filePath}/debug/debug.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 该filter的作用：过滤掉不是DEBUG level的那些日志（还有很多种类的filter） -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch> <!-- 表示若符合该level的日志将被记录下来 -->
+			<onMissmatch>DENY</onMissmatch> <!-- 表示不符合该level的日志将不被记录下来 -->
+		</filter>
+	</appender>
+
+	<!-- INFO -->
+	<appender name="infoAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志信息文件存放路径 -->
+		<file>${log.filePath}/info.log</file>
+		<!-- 设置滚动策略，该滚动策略是基于时间去滚动的 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 设置文件名称,从后缀即可以看出logback会将我们的日志文件进行压缩(一天一个日志文件) -->
+			<fileNamePattern>${log.filePath}/info/info.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 该filter的作用：过滤掉不是DEBUG level的那些日志（还有很多种类的filter） -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch> <!-- 表示若符合该level的日志将被记录下来 -->
+			<onMissmatch>DENY</onMissmatch> <!-- 表示不符合该level的日志将不被记录下来 -->
+		</filter>
+	</appender>
+
+	<!-- ERROR -->
+	<appender name="errorAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志信息文件存放路径 -->
+		<file>${log.filePath}/error.log</file>
+		<!-- 设置滚动策略，该滚动策略是基于时间去滚动的(一天生成一个日志文件) -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 设置文件名称,从后缀即可以看出logback会将我们的日志文件进行压缩(一天生成一个日志文件) -->
+			<fileNamePattern>${log.filePath}/error/error.%d{yyyy-MM-dd}.log.gz
+			</fileNamePattern>
+			<!-- 文件最大保存历史数量 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+		<!-- 该filter的作用：过滤掉不是DEBUG level的那些日志（还有很多种类的filter） -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch> <!-- 表示若符合该level的日志将被记录下来 -->
+			<onMissmatch>DENY</onMissmatch> <!-- 表示不符合该level的日志将不被记录下来 -->
+		</filter>
+	</appender>
+
+	<!-- 用来存放日志对象，同时告诉logback需要关注哪个package下面的信息,level标签用于告知logback只记录哪个日志级别以上的信息 -->
+	<!-- additivity="true"表示这里的logger也会引用root下的appender，但是level还是logger的level -->
+	<logger name="cn.jing.campusShop" level="${log.level}"
+		additivity="true">
+		<appender-ref ref="debugAppender" />
+		<appender-ref ref="infoAppender" />
+		<appender-ref ref="errorAppender" />
+	</logger>
+
+	<!-- 根logger,这里的设置表明只要跟root相关的信息都会打到控制台中 -->
+	<root level="info">
+		<appender-ref ref="consoleAppender" />
+	</root>
+</configuration>
