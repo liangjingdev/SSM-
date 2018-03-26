@@ -18,7 +18,7 @@ public class HeadLine {
 	private String lineImg;
 	//优先级。会按照优先级大小进行展示
 	private Integer priority;
-	// 0.不可用 1.可用
+	// 0.不可用 1.可用 (状态为1才可以在前端展示系统中显示)
 	private Integer enableStatus;
 	private Date createTime;
 	private Date lastEditTime;
