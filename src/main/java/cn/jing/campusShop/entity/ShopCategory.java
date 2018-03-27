@@ -20,7 +20,7 @@ public class ShopCategory {
 	// 在数据表中表示的是上级ID，即表示该店铺类别的父类。（比如美食饮品商铺类别中又包含有奶茶店店铺类别）
 	private ShopCategory parent;
 
-	public long getShopCategoryId() {
+	public Long getShopCategoryId() {
 		return shopCategoryId;
 	}
 
