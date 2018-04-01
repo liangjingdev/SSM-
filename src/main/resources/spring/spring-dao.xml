@@ -9,8 +9,20 @@
 	<!-- 配置整合mybatis过程 -->
 	<!-- 1.配置数据库相关参数properties的属性：${url} 注意：classpath即表示src/main/resources -->
 	<!-- 这是需要去读取变量的文件 -->
-	<context:property-placeholder location="classpath:jdbc.properties" />
-	
+	<!-- <context:property-placeholder location="classpath:jdbc.properties" 
+		/> -->
+	<bean class="cn.jing.campusShop.util.EncryPropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<!-- 如果以后还需要用到哪个.properties文件的话，在此处进行添加即可(这里添加的.properties文件对于所有spring的配置文件都是共享的) 
+					即在其它的spring配置文件如spring-redis中也是可以引用.properties文件中的属性的值的。如果需要对其中某个字段的值进行加密的话，仿造上述做法即可 -->
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+		<!-- 指定文件的编码 -->
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+
 	<!-- 2.数据库连接池 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<!-- c3p0连接池的私有属性 -->
