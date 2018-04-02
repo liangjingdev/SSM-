@@ -18,14 +18,14 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
 	<mvc:default-servlet-handler />
 
-	<!-- 定义视图解析器 -->
+	<!-- 3、定义视图解析器 -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/html/"></property>
 		<property name="suffix" value=".html"></property>
 	</bean>
 
-	<!-- 文件上传解析器 -->
+	<!-- 4、文件上传解析器 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="utf-8"></property>
@@ -34,7 +34,17 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 		<property name="maxInMemorySize" value="20971520"></property>
 	</bean>
 
-	<!-- 4、扫描web相关的bean -->
+	<!-- 5、扫描web相关的bean -->
 	<context:component-scan base-package="cn.jing.campusShop.web" />
 
+	<!-- 6、Spring拦截器 -->
+	<mvc:interceptors>
+		<!-- 校验是否登录了店家管理系统的拦截器,因为店家管理系统中的信息是十分重要的，不允许不相关的人随意修改的，所以有必要设置拦截器进行相关信息验证 -->
+		<mvc:interceptor>
+		<!-- 下面这句话表示拦截cn/jing/campusShop/web/shopadmin该包下的所有(public)方法，即设置该拦截器所需要拦截的那些方法。该项目中对那些方法进行登录权限的校验 -->
+			<mvc:mapping path="/shopadmin/**" />
+			<bean id="ShopInterceptor"
+				class="cn.jing.campusShop.interceptor.shopadmin.ShopLoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans>

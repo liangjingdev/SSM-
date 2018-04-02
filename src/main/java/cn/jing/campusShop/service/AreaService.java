@@ -12,5 +12,8 @@ import cn.jing.campusShop.entity.Area;
  */
 public interface AreaService {
 
-	List<Area>  getAreaList();
+	//key (静态常量，一经定义即不能更改)
+	public static final String AREALISTKEY = "arealist";
+
+	List<Area> getAreaList();
 }

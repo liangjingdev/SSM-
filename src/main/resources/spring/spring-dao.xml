@@ -17,6 +17,7 @@
 				<!-- 如果以后还需要用到哪个.properties文件的话，在此处进行添加即可(这里添加的.properties文件对于所有spring的配置文件都是共享的) 
 					即在其它的spring配置文件如spring-redis中也是可以引用.properties文件中的属性的值的。如果需要对其中某个字段的值进行加密的话，仿造上述做法即可 -->
 				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
 			</list>
 		</property>
 		<!-- 指定文件的编码 -->
