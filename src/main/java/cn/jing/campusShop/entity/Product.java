@@ -18,16 +18,18 @@ public class Product {
 	private String imgAddr;
 	private String normalPrice;
 	private String promotionPrice;
+	// 项目2.0 商品积分
+	private Integer point;
 	private Integer priority;
 	private Date createTime;
 	private Date lastEditTime;
-	// -1.不可用  0.下架（即表示不在前端展示系统展示） 1.在前端展示系统展示
+	// -1.不可用 0.下架（即表示不在前端展示系统展示） 1.在前端展示系统展示
 	private Integer enableStatus;
 	// 商品图片（一对多的关系）
 	private List<ProductImg> productImgList;
-	//商品类别
+	// 商品类别
 	private ProductCategory productCategory;
-	//该商品所属店铺
+	// 该商品所属店铺
 	private Shop shop;
 
 	public Long getProductId() {
@@ -132,6 +134,14 @@ public class Product {
 
 	public void setShop(Shop shop) {
 		this.shop = shop;
+	}
+
+	public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
 	}
 
 }

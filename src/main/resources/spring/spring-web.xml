@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd
 http://www.springframework.org/schema/mvc
-http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
 	<!-- 配置SpringMVC -->
 	<!-- 1、开启SpringMVC注解模式 -->
@@ -37,14 +37,31 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<!-- 5、扫描web相关的bean -->
 	<context:component-scan base-package="cn.jing.campusShop.web" />
 
-	<!-- 6、Spring拦截器 -->
+	<!-- 6、Spring拦截器 下列拦截器依次执行 -->
 	<mvc:interceptors>
-		<!-- 校验是否登录了店家管理系统的拦截器,因为店家管理系统中的信息是十分重要的，不允许不相关的人随意修改的，所以有必要设置拦截器进行相关信息验证 -->
+		<!-- 拦截器1:校验是否登录了店家管理系统的拦截器,因为店家管理系统中的信息是十分重要的，不允许不相关的人随意修改的，所以有必要设置拦截器进行相关信息验证。注意：只有用户类型为店家的用户才可以进入店家管理系统进行相关操作 -->
 		<mvc:interceptor>
-		<!-- 下面这句话表示拦截cn/jing/campusShop/web/shopadmin该包下的所有(public)方法，即设置该拦截器所需要拦截的那些方法。该项目中对那些方法进行登录权限的校验 -->
+			<!-- 下面这句话表示拦截cn/jing/campusShop/web/shopadmin该包下的所有(public)方法，即设置该拦截器所需要拦截的那些方法。该项目中对那些方法进行登录权限的校验 -->
 			<mvc:mapping path="/shopadmin/**" />
 			<bean id="ShopInterceptor"
 				class="cn.jing.campusShop.interceptor.shopadmin.ShopLoginInterceptor" />
+		</mvc:interceptor>
+		<!-- 拦截器2: 校验是否对当前该店铺有操作权限的拦截 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/shopadmin/**" />
+			<!-- 排除一些方法，即不拦截以下列出来的这些方法 -->
+			<!-- shoplist page -->
+			<mvc:exclude-mapping path="/shopadmin/shoplist" />
+			<mvc:exclude-mapping path="/shopadmin/getshoplist" />
+			<!-- shopregister page -->
+			<mvc:exclude-mapping path="/shopadmin/getshopinitinfo" />
+			<mvc:exclude-mapping path="/shopadmin/registershop" />
+			<mvc:exclude-mapping path="/shopadmin/shopoperation" />
+			<!-- shopmanage page -->
+			<mvc:exclude-mapping path="/shopadmin/shopmanagement" />
+			<mvc:exclude-mapping path="/shopadmin/getshopmanagementinfo" />
+			<bean id="ShopPermissionInterceptor"
+				class="cn.jing.campusShop.interceptor.shopadmin.ShopPermissionInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>
