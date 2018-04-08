@@ -43,6 +43,8 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 		<mvc:interceptor>
 			<!-- 下面这句话表示拦截cn/jing/campusShop/web/shopadmin该包下的所有(public)方法，即设置该拦截器所需要拦截的那些方法。该项目中对那些方法进行登录权限的校验 -->
 			<mvc:mapping path="/shopadmin/**" />
+			<!-- shopauthmanagement page -->
+			<mvc:exclude-mapping path="/shopadmin/addshopauthmap" />
 			<bean id="ShopInterceptor"
 				class="cn.jing.campusShop.interceptor.shopadmin.ShopLoginInterceptor" />
 		</mvc:interceptor>
@@ -60,6 +62,8 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 			<!-- shopmanage page -->
 			<mvc:exclude-mapping path="/shopadmin/shopmanagement" />
 			<mvc:exclude-mapping path="/shopadmin/getshopmanagementinfo" />
+			<!-- shopauthmanagement page -->
+			<mvc:exclude-mapping path="/shopadmin/addshopauthmap" />
 			<bean id="ShopPermissionInterceptor"
 				class="cn.jing.campusShop.interceptor.shopadmin.ShopPermissionInterceptor" />
 		</mvc:interceptor>

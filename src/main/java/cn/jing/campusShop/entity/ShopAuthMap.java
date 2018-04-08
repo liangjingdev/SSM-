@@ -9,7 +9,7 @@ public class ShopAuthMap {
 	private Long shopAuthId;
 	// 职称名
 	private String title;
-	// 职称符号（可用于权限控）
+	// 职称符号（可用于权限控制）--比如老板娘会有管理店铺操作的权限，而店员则没有 0表示最高权限
 	private Integer titleFlag;
 	// 授权有效状态 0.无效 1.有效（删除该员工的时候会用到）
 	private Integer enableStatus;

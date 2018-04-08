@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.jing.campusShop.dao.ShopAuthMapDao;
 import cn.jing.campusShop.dao.ShopDao;
 import cn.jing.campusShop.dto.ShopExecution;
 import cn.jing.campusShop.entity.Shop;
+import cn.jing.campusShop.entity.ShopAuthMap;
 import cn.jing.campusShop.enums.ShopStateEnum;
 import cn.jing.campusShop.exceptions.ShopOperationException;
 import cn.jing.campusShop.service.ShopService;
@@ -28,6 +30,8 @@ public class ShopServiceImpl implements ShopService {
 
 	@Autowired
 	private ShopDao shopDao;
+	@Autowired
+	private ShopAuthMapDao shopAuthMapDao;
 
 	@Override
 	@Transactional
@@ -58,6 +62,22 @@ public class ShopServiceImpl implements ShopService {
 					effectedNum = shopDao.updateShop(shop);
 					if (effectedNum <= 0) {
 						throw new ShopOperationException("更新店铺图片地址失败");
+					}
+					//执行增加shopAuthMap操作
+					ShopAuthMap shopAuthMap = new ShopAuthMap();
+					shopAuthMap.setEmployee(shop.getOwner());
+					shopAuthMap.setCreateTime(new Date());
+					shopAuthMap.setLastEditTime(new Date());
+					shopAuthMap.setTitle("店家");
+					shopAuthMap.setTitleFlag(0);
+					shopAuthMap.setEnableStatus(1);
+					try {
+						effectedNum = shopAuthMapDao.insertShopAuthMap(shopAuthMap);
+						if (effectedNum <= 0) {
+							throw new ShopOperationException("授权创建失败");
+						}
+					} catch (Exception e) {
+						throw new ShopOperationException("insertShopAuthMap error:" + e.getMessage());
 					}
 				}
 			}
