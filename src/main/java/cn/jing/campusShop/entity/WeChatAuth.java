@@ -7,20 +7,20 @@ import java.util.Date;
  * @author liangjing
  *
  */
-public class WeChatAuth {
+public class WechatAuth {
 
 	//自身Id
-	private Long weChatAuthId;
+	private Long wechatAuthId;
 	private String openId;
 	private Date createTime;
 	//由于此处与用户表实体类相关联，所以这里直接以PersonInfo为类型(在数据库表中是用户的ID,因为数据库不支持对象)
 	private PersonInfo personInfo;
 	
 	public Long getWeChatAuthId() {
-		return weChatAuthId;
+		return wechatAuthId;
 	}
 	public void setWeChatAuthId(Long weChatAuthId) {
-		this.weChatAuthId = weChatAuthId;
+		this.wechatAuthId = weChatAuthId;
 	}
 	public String getOpenId() {
 		return openId;
