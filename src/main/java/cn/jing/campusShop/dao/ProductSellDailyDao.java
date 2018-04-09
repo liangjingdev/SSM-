@@ -30,4 +30,11 @@ public interface ProductSellDailyDao {
 	 */
 	int insertProductSellDaily();
 
+	/**
+	 * function:统计平台当天没有销量的商品，补全信息，将它们的销量置为0
+	 * (说白了，也就是还需要给它们一个ProductSellDaily实体类对象，避免Echart图表的数据链断开)
+	 * 
+	 * @return
+	 */
+	int insertDefaultProductSellDaily();
 }

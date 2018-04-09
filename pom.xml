@@ -158,6 +158,19 @@
 			<artifactId>javase</artifactId>
 			<version>3.3.0</version>
 		</dependency>
+		<!-- 利用Quartz实现定时任务调度 -->
+		<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<!-- 注意：需要提供该类来支持Quartz -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.3.7.RELEASE</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>campusShop</finalName>
