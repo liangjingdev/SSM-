@@ -3,6 +3,7 @@ package cn.jing.campusShop.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.jing.campusShop.dao.UserShopMapDao;
 import cn.jing.campusShop.dto.UserShopMapExecution;
@@ -10,6 +11,7 @@ import cn.jing.campusShop.entity.UserShopMap;
 import cn.jing.campusShop.service.UserShopMapService;
 import cn.jing.campusShop.util.PageCalculator;
 
+@Service
 public class UserShopMapServiceImpl implements UserShopMapService {
 
 	@Autowired
