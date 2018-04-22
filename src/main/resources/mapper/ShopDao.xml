@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jing.campusShop.dao.ShopDao">
+
+	<!-- resultMap的作用是定义映射规则，以及级联，定制类型转换器等。resultMap定义的主要是一个结果集的映射关系，也就是SQL 
+		到Java Bean的映射关系定义。注意配置了resultMap就不能再配置resultType了。 -->
+	<resultMap type="cn.jing.campusShop.entity.Shop" id="shopMap">
+		<id column="shop_id" property="shopId" />
+		<result column="shop_name" property="shopName" />
+		<result column="shop_desc" property="shopDesc" />
+		<result column="shop_addr" property="shopAddr" />
+		<result column="phone" property="phone" />
+		<result column="shop_img" property="shopImg" />
+		<result column="priority" property="priority" />
+		<result column="create_time" property="createTime" />
+		<result column="last_edit_time" property="lastEditTime" />
+		<result column="enable_status" property="enableStatus" />
+		<result column="advice" property="advice" />
+		<!-- 一对一级联，这种配置方式只适用于简单且关联不多的情景下，否则一下子取出大量数据会造成内存浪费 -->
+		<association property="area" column="area_id"
+			javaType="cn.jing.campusShop.entity.Area">
+			<!-- 此处表示只需要取出areaId以及areaName信息即可，不需要去加载其它没写出来的信息(因为不需要用到那些数据，也避免了造成内存浪费) -->
+			<id column="area_id" property="areaId" />
+			<result column="area_name" property="areaName" />
+		</association>
+		<association property="shopCategory" column="shop_category_id"
+			javaType="cn.jing.campusShop.entity.ShopCategory">
+			<id column="shop_category_id" property="shopCategoryId" />
+			<result column="shop_category_name" property="shopCategoryName" />
+		</association>
+		<association property="owner" column="user_id"
+			javaType="cn.jing.campusShop.entity.PersonInfo">
+			<id column="user_id" property="userId" />
+			<result column="name" property="name" />
+		</association>
+	</resultMap>
+
+
+	<!-- 1、设置useGenerateKeys为true，则表示能够使用jdbc的getGeneratedKeys获取数据库自增主键值， 这里即插入成功后就返回该店铺的主键值，插入到我们传入的那个Shop的实体类中。那么为什么要获取呢？ 
+		因为比如我们添加这个商铺信息的时候，同时也需要存储店铺的图片，那么为了保证图片存储的合理性， 我们需要将属于这个店铺的图片存储到属于该店铺的目录下，则这也就导致了每个店铺所拥有的目录的名字是不同的， 
+		我们需要依靠店铺的主键去区分这个名字，因此在存储图片的时候，需要获取该店铺的id。 2、keyColumn属性指定数据库表中的主键的字段名 （仅对insert 
+		和 update 有用）通过生成的键值设置表中的列名，这个设置仅在某些数据库（像 PostgreSQL） 是必须的，当主键列不是表中的第一列的时候需要设置。 
+		3、keyProperty属性则指定Shop实体类中的哪个属性是与该主键绑定在一起的. （仅对 insert 和 update 有用）唯一标记一个属性，MyBatis 
+		会通过 getGeneratedKeys 的返回值 或者通过 insert 语句的 selectKey 子元素设置它的键值，默认：unset。 -->
+	<insert id="insertShop" useGeneratedKeys="true" keyColumn="shop_id"
+		keyProperty="shopId">
+		<!-- 因为表中的shop_id是自动生成的，因此不需要写入了。 -->
+		INSERT INTO
+		tb_shop(owner_id,area_id,shop_category_id,shop_name,shop_desc,shop_addr,
+		phone,shop_img,priority,create_time,last_edit_time,enable_status,advice)
+		VALUES
+		(#{owner.userId},#{area.areaId},#{shopCategory.shopCategoryId},#{shopName},
+		#{shopDesc},#{shopAddr},#{phone},#{shopImg},#{priority},#{createTime},#{lastEditTime},
+		#{enableStatus},#{advice})
+	</insert>
+
+	<!-- 可利用SQL动态元素根据不同的情况生成不同的SQL语句(如下：若属性不为空，则进行更新)。注意数据表中有些字段是不需要进行更改的。每次操作都要记得更新lastEditime -->
+	<update id="updateShop" parameterType="cn.jing.campusShop.entity.Shop">
+		update tb_shop
+		<set>
+			<if test="shopName!=null">shop_name=#{shopName},</if>
+			<if test="shopDesc!=null">shop_desc=#{shopDesc},</if>
+			<if test="shopAddr!=null">shop_addr=#{shopAddr},</if>
+			<if test="phone!=null">phone=#{phone},</if>
+			<if test="shopImg!=null">shop_img=#{shopImg},</if>
+			<if test="priority!=null">priority=#{priority},</if>
+			<if test="lastEditTime!=null">last_edit_time=#{lastEditTime},</if>
+			<if test="enableStatus!=null">enable_status=#{enableStatus},</if>
+			<if test="advice!=null">advice=#{advice},</if>
+			<if test="area!=null">area_id=#{area.areaId},</if>
+			<if test="shopCategory!=null">shop_category_id=#{shopCategory.shopCategoryId}</if>
+		</set>
+		where shop_id=#{shopId}
+	</update>
+
+	<!-- 使用ResultMap来定义结果集映射关系,并且此处利用了别名来代表具体的表， 便于书写(s.shop_id表示从tb_shop这张表中取出shop_id的值),#{shopId}表示传入的参数值 -->
+	<select id="queryByShopId" resultMap="shopMap" parameterType="Long">
+		SELECT
+		s.shop_id,
+		s.shop_name,
+		s.shop_desc,
+		s.shop_addr,
+		s.phone,
+		s.shop_img,
+		s.priority,
+		s.create_time,
+		s.last_edit_time,
+		s.enable_status,
+		s.advice,
+		a.area_id,
+		a.area_name,
+		<!-- 一旦有重名，就需要使用该方法来进行区分：a.priority AS areaPriority，否则取出的值将会是s.priority的值 -->
+		sc.shop_category_id,
+		sc.shop_category_name
+		FROM
+		tb_shop s,
+		tb_area a,
+		tb_shop_category sc
+		WHERE
+		s.area_id = a.area_id
+		AND
+		s.shop_category_id =
+		sc.shop_category_id
+		AND
+		s.shop_id = #{shopId}
+	</select>
+
+	<select id="queryShopList" resultMap="shopMap">
+		SELECT
+		s.shop_id,
+		s.shop_name,
+		s.shop_desc,
+		s.shop_addr,
+		s.phone,
+		s.shop_img,
+		s.priority,
+		s.create_time,
+		s.last_edit_time,
+		s.enable_status,
+		s.advice,
+		a.area_id,
+		a.area_name,
+		<!-- 一旦有重名，就需要使用该方法来进行区分：a.priority AS areaPriority，否则取出的值将会是s.priority的值 -->
+		sc.shop_category_id,
+		sc.shop_category_name
+		FROM
+		tb_shop s,
+		tb_area a,
+		tb_shop_category sc
+		<where>
+			<if
+				test="shopCondition.shopCategory != null 
+		and shopCondition.shopCategory.shopCategoryId != null">
+				and s.shop_category_id =
+				#{shopCondition.shopCategory.shopCategoryId}
+			</if>
+			<!-- 如果以下条件成立的话，则就去获取该大类下的所有子类别的所有店铺列表 -->
+			<if
+				test="shopCondition.shopCategory != null 
+			and shopCondition.shopCategory.parent!=null 
+			and shopCondition.shopCategory.parent.shopCategoryId!=null">
+				and s.shop_category_id in (select shop_category_id from
+				tb_shop_category
+				WHERE parent_id =
+				#{shopCondition.shopCategory.parent.shopCategoryId})
+			</if>
+			<if test="shopCondition.area!=null 
+		and shopCondition.area.areaId!=null">
+				and s.area_id = #{shopCondition.area.areaId}
+			</if>
+			<!-- 进行模糊查询 -->
+			<if test="shopCondition.shopName!=null">
+				and s.shop_name like '%${shopCondition.shopName}%'
+			</if>
+			<if test="shopCondition.enableStatus != null">
+				and s.enable_status = #{shopCondition.enableStatus}
+			</if>
+			<if
+				test="shopCondition.owner!=null
+		and shopCondition.owner.userId!=null">
+				and s.owner_id = #{shopCondition.owner.userId}
+			</if>
+			<!-- 因为tb_shop表与tb_area表是通过area_id去相联的，而与tb_shop_category表是通过shop_category_id去相联的 -->
+			AND
+			s.area_id = a.area_id
+			AND
+			s.shop_category_id =
+			sc.shop_category_id
+		</where>
+		ORDER BY
+		s.priority DESC
+		LIMIT #{rowIndex},#{pageSize};
+	</select>
+
+	<!-- 因为queryShopList()是分页查询的，假如查询到数据有十条，而我们定义了一次只能返回6条数据，那么我们就可以分两次去查询，所以首先要得到查询后的数据集的总条数 -->
+	<!-- count(1)表示总数 -->
+	<select id="queryShopCount" resultType="int">
+		SELECT
+		count(1)
+		FROM
+		tb_shop s,
+		tb_area a,
+		tb_shop_category sc
+		<where>
+			<if
+				test="shopCondition.shopCategory!=null 
+		and shopCondition.shopCategory.shopCategoryId!=null">
+				and s.shop_category_id =
+				#{shopCondition.shopCategory.shopCategoryId}
+			</if>
+			<!-- 如果以下条件成立的话，则就去获取该大类下的所有子类别的所有店铺列表 -->
+			<if
+				test="shopCondition.shopCategory != null 
+			and shopCondition.shopCategory.parent!=null 
+			and shopCondition.shopCategory.parent.shopCategoryId!=null">
+				and s.shop_category_id in (select shop_category_id from
+				tb_shop_category
+				WHERE parent_id =
+				#{shopCondition.shopCategory.parent.shopCategoryId})
+			</if>
+			<if test="shopCondition.area!=null 
+		and shopCondition.area.areaId!=null">
+				and s.area_id = #{shopCondition.area.areaId}
+			</if>
+			<!-- 进行模糊查询 -->
+			<if test="shopCondition.shopName!=null">
+				and s.shop_name like '%${shopCondition.shopName}%'
+			</if>
+			<if test="shopCondition.enableStatus != null">
+				and s.enable_status = #{shopCondition.enableStatus}
+			</if>
+			<if
+				test="shopCondition.owner!=null
+		and shopCondition.owner.userId!=null">
+				and s.owner_id = #{shopCondition.owner.userId}
+			</if>
+			<!-- 因为tb_shop表与tb_area表是通过area_id去相联的，而与tb_shop_category表是通过shop_category_id去相联的 -->
+			AND
+			s.area_id = a.area_id
+			AND
+			s.shop_category_id =
+			sc.shop_category_id
+		</where>
+	</select>
+</mapper>

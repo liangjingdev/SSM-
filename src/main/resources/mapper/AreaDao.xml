@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 注意：以下这段话必不可少，否则将会产生错误 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jing.campusShop.dao.AreaDao">
+	<select id="queryArea" resultType="cn.jing.campusShop.entity.Area">
+		SELECT area_id,area_name,priority,create_time,last_edit_time
+		FROM tb_area
+		ORDER BY priority DESC
+	</select>
+</mapper>

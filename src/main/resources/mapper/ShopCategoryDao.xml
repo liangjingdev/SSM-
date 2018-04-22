@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.jing.campusShop.dao.ShopCategoryDao">
+	<select id="queryShopCategory" resultType="cn.jing.campusShop.entity.ShopCategory">
+		SELECT
+		shop_category_id,
+		shop_category_name,
+		shop_category_desc,
+		shop_category_img,
+		priority,
+		create_time,
+		last_edit_time,
+		parent_id
+		FROM
+		tb_shop_category
+		<where>
+			<!-- 如果传入的ShopCategory对象不为空的话，那么此时就去查询得到所有的parent_id不为空的二级店铺类别； 如果传入的ShopCategory对象不为空且其parent属性存在的话，那么此时就去查询得到所有属于该一级店铺类别下的二级店铺类型； 
+				如果传入的ShopCategory对象为空的话，那么就去查询得到所有的一级店铺类型 -->
+			<if test="shopCategoryCondition == null">
+				and parent_id is null
+			</if>
+			<if test="shopCategoryCondition!=null">
+				and parent_id is not null
+			</if>
+			<if
+				test="shopCategoryCondition != null and shopCategoryCondition.parent!=null and shopCategoryCondition.parent.shopCategoryId!=null">
+				and parent_id =
+				#{shopCategoryCondition.parent.shopCategoryId}
+			</if>
+		</where>
+		ORDER BY
+		priority DESC
+	</select>
+
+</mapper>
