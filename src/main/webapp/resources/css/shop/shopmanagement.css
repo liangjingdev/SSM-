@@ -1,0 +1,5 @@
+@CHARSET "UTF-8";
+<!-- 控制button之间的间距 -->
+.mb{
+	margin-bottom: .5rem
+}
